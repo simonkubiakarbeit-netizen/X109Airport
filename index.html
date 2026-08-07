@@ -1,128 +1,31 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const db = window.supabase.createClient(
+  "https://gqhmwdddttmvvnovfbrl.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxaG13ZGRkdHRtdnZub3ZmYnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDE5ODgsImV4cCI6MjEwMTMxNzk4OH0.LoEWQC2dZv9qoZ2GrM691ATs6a3gaX-hiifPPLJQBI4"
+);
+
+db.from("bookings")
+  .select("*")
+  .then(({ data, error }) => {
+   
+  });
+</script>
 <head>
+  <style>
+    div:has(>div>div>div) {}
+
+    /* quick buttons entfernt - via JS */
+
+    
+  </style>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>X109 Shuttle - Live</title>
-  <!-- FIX 1: Korrekte Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
-  <script>
-    // Global DB Client
-    const SUPABASE_URL = "https://gqhmwdddttmvvnovfbrl.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxaG13ZGRkdHRtdnZub3ZmYnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDE5ODgsImV4cCI6MjEwMTMxNzk4OH0.LoEWQC2dZv9qoZ2GrM691ATs6a3gaX-hiifPPLJQBI4";
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    window.db = db;
-    
-    // Cache
-    window.BOOKINGS_CACHE = [];
-    window.DOKS_CACHE = [];
-    
-    // Initial Load
-    db.from("bookings").select("*").then(({data}) => {
-      if(data) window.BOOKINGS_CACHE = data;
-      console.log('Bookings geladen:', data?.length);
-    });
-    db.from("dokumente").select("*").then(({data}) => {
-      if(data) window.DOKS_CACHE = data.map(r=>r.data);
-    });
-
-    // FIX 2: Realtime mit sauberem Status-Logging
-    
-    // FIX 2: Realtime mit sauberem Status-Logging - ANGEPASST AN DEIN SCHEMA (booking_date)
-    let realtimeChannel = null;
-    function initRealtimeSync() {
-      if (realtimeChannel) try { db.removeChannel(realtimeChannel); } catch(e){}
-      realtimeChannel = db.channel('x109-live-v3')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, async (payload) => {
-          console.log('[REALTIME] bookings:', payload.eventType, payload.new?.booking_date);
-          // Bei eurem Schema ist eine Zeile = ein ganzer Tag. Einfach neu laden ist sicherer
-          const { data } = await db.from("bookings").select("*");
-          if(data) {
-            window.BOOKINGS_CACHE = data;
-            // Wenn deine App eine globale Datenstruktur g[date] nutzt, auch die updaten
-            if(window.g && payload.new?.booking_date && payload.new?.data){
-               window.g[payload.new.booking_date] = payload.new.data;
-            }
-            // Versuche alle bekannten Render-Funktionen zu triggern
-            if(window.renderBookings) window.renderBookings();
-            if(window.renderKalender) window.renderKalender();
-            if(window.initDokTab) window.initDokTab();
-            // Fallback: Event feuern
-            window.dispatchEvent(new CustomEvent('bookings-updated', {detail: data}));
-          }
-          const dot = document.getElementById('sync-dot');
-          if(dot){ dot.style.background='#22c55e'; dot.animate([{transform:'scale(1)'},{transform:'scale(1.8)'},{transform:'scale(1)'}],{duration:600}); }
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'config' }, async () => {
-          console.log('[REALTIME] config geändert - neu laden');
-          // Config neu laden falls vorhanden
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'dokumente' }, async () => {
-          const { data } = await db.from("dokumente").select("*");
-          if(data) window.DOKS_CACHE = data.map(r=>r.data);
-        })
-        .subscribe((status, err) => {
-          console.log('[REALTIME STATUS]', status, err || '');
-          const label = document.getElementById('sync-label');
-          const dot = document.getElementById('sync-dot');
-          if(label){
-            if(status==='SUBSCRIBED'){ label.textContent='Live-Sync aktiv'; if(dot) dot.style.background='#22c55e'; }
-            else if(status==='CHANNEL_ERROR'){ label.textContent='Fehler: RLS/Publication fehlt!'; if(dot) dot.style.background='#ef4444'; }
-            else if(status==='TIMED_OUT'){ label.textContent='Projekt pausiert?'; if(dot) dot.style.background='#f59e0b'; }
-            else { label.textContent=status; }
-          }
-        });
-    }
-    window.addEventListener('DOMContentLoaded', () => setTimeout(initRealtimeSync, 800));
-
-    // FIX 3: Sichere Speicher-Funktion - DIE MUSST DU NUTZEN
-    
-    // FIX 4: Config speichern - sicher + mit Live-Sync
-    window.saveConfigLive = async function(id, data) {
-      console.log('[CONFIG SAVE]', id, data?.length || Object.keys(data||{}).length);
-      const { error } = await db.from("config").upsert(
-        { id: id, data: data, updated_at: new Date().toISOString() },
-        { onConflict: "id" }
-      );
-      if(error){
-        console.error('[CONFIG SAVE ERROR]', id, error);
-        // Zeige Fehler im UI
-        const label = document.getElementById('sync-label');
-        if(label) label.textContent = 'Speichern fehlgeschlagen: ' + error.message;
-        return false;
-      }
-      console.log('[CONFIG SAVE OK]', id);
-      return true;
-    }
-
-    // Override: Wenn RLS blockt, zeig es an
-    db.from("config").select("*").then(({data, error})=>{
-      if(error) console.error('[CONFIG LOAD ERROR] Du brauchst RLS Policy für config:', error);
-      else console.log('[CONFIG LOAD OK]', data?.length, 'Einträge');
-    });
-
-    window.saveBookingLive = async function(date, dayData) {
-      console.log('Speichere', date, dayData);
-      const { error } = await db.from("bookings").upsert(
-        { booking_date: date, data: dayData, updated_at: new Date().toISOString() },
-        { onConflict: "booking_date" }
-      );
-      if(error){
-        console.error('Speicher-Fehler:', error);
-        alert('Fehler beim Speichern: ' + error.message);
-        return false;
-      }
-      // Lokal auch updaten
-      if(window.g) window.g[date] = dayData;
-      return true;
-    }
-
-  </script>
-  <style>
-    #sync-indicator { position:fixed; bottom:12px; right:12px; z-index:9999; display:flex; align-items:center; gap:8px; background:white; border:1px solid #e4e4e7; border-radius:999px; padding:6px 12px; font-size:11px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-    #sync-dot { width:8px; height:8px; border-radius:50%; background:#71717a; transition:background 0.3s; }
-  </style>
-
+  <title>React Artifact</title>
   <style>
     *,
     :after,
@@ -5092,11 +4995,29 @@ db.from("reports")
 
   });
    } catch { } }, []), 
-  H.useEffect(() => { try { if(!Array.isArray(e) || e.length===0) return; window.saveConfigLive('dienste', e); } catch(err) {} }, [e]),
-  H.useEffect(() => { try { if(!Array.isArray(t) || t.length===0) return; window.saveConfigLive('fahrzeuge', t); } catch(err) {} }, [t]),
-  H.useEffect(() => { try { if(!Array.isArray(l) || l.length===0) return; window.saveConfigLive('fahrerListe', l); } catch(err) {} }, [l]),
-  H.useEffect(() => { try { if(!Array.isArray(f) || f.length===0) return; window.saveConfigLive('orte', f); } catch(err) {} }, [f]),
-  H.useEffect(() => { try { if(!k || Object.keys(k).length===0) return; window.saveConfigLive('zeiten', k); } catch(err) {} }, [k]),
+  H.useEffect(() => {
+  try {
+  // SICHERHEIT: Niemals leere Config speichern - verhindert Reset auf anderen Geräten
+  if(Array.isArray(e) && e.length===0 && Array.isArray(t) && t.length===0 && Array.isArray(l) && l.length===0 && Array.isArray(f) && f.length===0) { console.log("CONFIG SAVE BLOCKED - alles leer, wird nicht gespeichert"); return; }
+   db.from("config")
+  .upsert({
+    id: 1,
+    data: {
+      dienste: e,
+      fahrzeuge: t,
+      fahrerListe: l,
+      orte: f,
+      zeiten: k
+    },
+    updated_at: new Date().toISOString()
+  }, {onConflict: "id"})
+  .select()
+  .then(({ data, error }) => {
+    console.log("CONFIG SAVE RESULT", data);
+    console.log("CONFIG ERROR", error);
+  });
+  } catch {}
+}, [e, t, l, f, k]);
 ``
 H.useEffect(() => {
   try {
@@ -5129,31 +5050,22 @@ H.useEffect(() => {
   } catch(e) { console.log("save error", e) }
 }, [g])
 
-// LIVE SYNC V9 AUTOSYNC - Bookings + Config getrennt
+// LIVE SYNC: Wenn ein anderes Gerät speichert, automatisch nachladen
 H.useEffect(() => {
   try {
-    console.log("AUTOSYNC V9 AKTIV");
-    const ch1 = db.channel('bookings-live-v9').on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, payload => {
-      if(payload.new?.booking_date){
-        console.log("LIVE Tag", payload.new.booking_date);
-        const cloud = {}; cloud[payload.new.booking_date] = payload.new.data;
-        C(prev => ({ ...prev, ...cloud }));
-      }
-      if(payload.eventType === 'DELETE' && payload.old?.booking_date){
-        C(prev => { const n={...prev}; delete n[payload.old.booking_date]; return n; });
-      }
-    }).subscribe();
-    const ch2 = db.channel('config-live-v9').on('postgres_changes', { event: '*', schema: 'public', table: 'config' }, payload => {
-      if(!payload.new?.id) return;
-      const L = payload.new.data;
-      console.log("LIVE Config", payload.new.id);
-      if(payload.new.id === 'dienste') n(L);
-      if(payload.new.id === 'fahrzeuge') r(L);
-      if(payload.new.id === 'fahrerListe') u(L);
-      if(payload.new.id === 'orte') v(L);
-      if(payload.new.id === 'zeiten') s(L);
-    }).subscribe();
-    return () => { try{ db.removeChannel(ch1); db.removeChannel(ch2);} catch(e){} };
+    const channel = db.channel('bookings-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, payload => {
+        console.log('Live Update aus Supabase!', payload);
+        if(payload.new && payload.new.booking_date) {
+          // Nur dieses Datum neu laden und mergen
+          window.__SUPABASE_BOOKINGS__ = window.__SUPABASE_BOOKINGS__ || {};
+          window.__SUPABASE_BOOKINGS__[payload.new.booking_date] = payload.new.data;
+          // Trigger reload
+          if(window.__RELOAD_BOOKINGS__) window.__RELOAD_BOOKINGS__(payload.new.booking_date, payload.new.data);
+        }
+      })
+      .subscribe();
+    return () => { db.removeChannel(channel); }
   } catch(e) {}
 }, [])
  H.useEffect(() => {
@@ -5725,6 +5637,6 @@ if (monthSel) {
       setInterval(renderFahrerDocs, 800);
     })();
   </script>
-<div id="sync-indicator"><div id="sync-dot"></div><span id="sync-label">Verbinde...</span></div></body>
+</body>
 
 </html>
