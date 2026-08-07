@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -16,7 +14,7 @@ db.from("bookings")
    
   });
 </script>
-
+<head>
   <style>
     div:has(>div>div>div) {}
 
@@ -4997,11 +4995,29 @@ db.from("reports")
 
   });
    } catch { } }, []), 
-  H.useEffect(() => { try { if(!Array.isArray(e) || e.length===0) return; db.from("config").upsert({ id: 'dienste', data: e, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE dienste",error||"ok")); } catch(err) {} }, [e]),
-  H.useEffect(() => { try { if(!Array.isArray(t) || t.length===0) return; db.from("config").upsert({ id: 'fahrzeuge', data: t, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE fahrzeuge",error||"ok")); } catch(err) {} }, [t]),
-  H.useEffect(() => { try { if(!Array.isArray(l) || l.length===0) return; db.from("config").upsert({ id: 'fahrerListe', data: l, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE fahrer",error||"ok")); } catch(err) {} }, [l]),
-  H.useEffect(() => { try { if(!Array.isArray(f) || f.length===0) return; db.from("config").upsert({ id: 'orte', data: f, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE orte",error||"ok")); } catch(err) {} }, [f]),
-  H.useEffect(() => { try { if(!k || Object.keys(k).length===0) return; db.from("config").upsert({ id: 'zeiten', data: k, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE zeiten",error||"ok")); } catch(err) {} }, [k]),
+  H.useEffect(() => {
+  try {
+  // SICHERHEIT: Niemals leere Config speichern - verhindert Reset auf anderen Geräten
+  if(Array.isArray(e) && e.length===0 && Array.isArray(t) && t.length===0 && Array.isArray(l) && l.length===0 && Array.isArray(f) && f.length===0) { console.log("CONFIG SAVE BLOCKED - alles leer, wird nicht gespeichert"); return; }
+   db.from("config")
+  .upsert({
+    id: 1,
+    data: {
+      dienste: e,
+      fahrzeuge: t,
+      fahrerListe: l,
+      orte: f,
+      zeiten: k
+    },
+    updated_at: new Date().toISOString()
+  }, {onConflict: "id"})
+  .select()
+  .then(({ data, error }) => {
+    console.log("CONFIG SAVE RESULT", data);
+    console.log("CONFIG ERROR", error);
+  });
+  } catch {}
+}, [e, t, l, f, k]);
 ``
 H.useEffect(() => {
   try {
