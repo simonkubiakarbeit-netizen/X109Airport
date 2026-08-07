@@ -18,11 +18,17 @@ db.from("bookings")
   <style>
     div:has(>div>div>div) {}
 
-    /* quick buttons entfernt - via JS */
+    .quick-admin,
+    .quick-dispo,
+    .quick-fahrer {
+      display: none !important
+    }
 
-    
+    [class*="quick-"] {
+      display: none !important
+    }
   </style>
-  
+  <script>document.addEventListener("DOMContentLoaded", () => { setInterval(() => { document.querySelectorAll("button").forEach(b => { if (b.textContent.includes("Als Admin testen") || b.textContent.includes("Als Dispo") || b.textContent.includes("Als Fahrer")) b.style.display = "none"; if (b.textContent.includes("Quick-Test")) b.parentElement.style.display = "none" }) }, 500) })</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>React Artifact</title>
@@ -1555,13 +1561,6 @@ db.from("bookings")
   <script>
     setTimeout(() => { document.getElementById('pwa-bar').style.display = 'flex'; }, 1500);
   </script>
-
-<script>
-window.__LAST_CHANGED_DATE__ = null;
-window.__SUPABASE_BOOKINGS__ = {};
-// Helper to track last changed date - wird von der App aufgerufen
-window.trackBookingChange = (date) => { window.__LAST_CHANGED_DATE__ = date; };
-</script>
 </head>
 
 <body>
@@ -4823,113 +4822,147 @@ Error generating stack: `+ u.message + `
              var Bv = [{ id: "o1", name: "Ingolstadt Nordbahnhof", gruppe: "Ingolstadt", reihenfolge: 1 }, { id: "o2", name: "ZOB Ingolstadt", gruppe: "Ingolstadt", reihenfolge: 2 }, { id: "o3", name: "Kurt-Huber-Straße", gruppe: "Ingolstadt", reihenfolge: 3 }, { id: "o4", name: "Langenbruck", gruppe: "Ingolstadt", reihenfolge: 4 }, { id: "o5", name: "Ingolstadt Village", gruppe: "Ingolstadt", reihenfolge: 5 }, { id: "o6", name: "München Hbf", gruppe: "München", reihenfolge: 1 }, { id: "o7", name: "Terminal 2", gruppe: "München", reihenfolge: 2 }, { id: "o8", name: "MAC", gruppe: "München", reihenfolge: 3 }, { id: "o9", name: "Besucherpark", gruppe: "München", reihenfolge: 4 }], Yv = [
            {
   id: "f1",
-  kennzeichen: "M-AB 1090",
-  typ: "Sprinter 9-Sitzer",
-  sitze: 8,
+  kennzeichen: "IN-VG 2006 ",
+  typ: "Reisebus",
+  sitze: 54,
   status: "aktiv",
-  notiz: "Neu bereift",
-  letzterKM: 124500
+  notiz: "",
+  letzterKM: 0
 },
 {
   id: "f2",
-  kennzeichen: "IN-CD 4321",
-  typ: "Vito 8-Sitzer",
-  sitze: 7,
+  kennzeichen: "IN-VG 2407",
+  typ: "Reisebus",
+  sitze: 54,
   status: "aktiv",
   notiz: "",
-  letzterKM: 89200
+  letzterKM: 0
 },
 {
   id: "f3",
-  kennzeichen: "M-EF 5678",
-  typ: "Crafter 9-Sitzer",
-  sitze: 8,
-  status: "wartung",
-  notiz: "Service 12.12.",
-  letzterKM: 88000
+  kennzeichen: "IN-VG 2501",
+  typ: "Reisebus",
+  sitze: 54,
+  status: "aktiv",
+  notiz: "",
+  letzterKM: 0
 },
 {
   id: "f4",
-  kennzeichen: "IN-GH 8765",
-  typ: "Transit",
-  sitze: 8,
+  kennzeichen: "IN-Vg 2502",
+  typ: "Reisebus",
+  sitze: 54,
   status: "aktiv",
   notiz: "",
-  letzterKM: 99000
+  letzterKM: 0
+},
+{
+  id: "f5",
+  kennzeichen: "IN-VG 2503",
+  typ: "Reisebus",
+  sitze: 54,
+  status: "aktiv",
+  notiz: "",
+  letzterKM: 0
+},
+{
+  id:"f6",
+  kennzeichen:"SP 90",
+  typ: "Reisebus",
+  sitze: 54,
+  status: "aktiv",
+  notiz: "",
+  letzterKM: 0
 }], 
 Xv = [{ 
   id: "dr1", 
   name: "Fahrer AE 1", 
   ae: "AE 1", 
-  standardFahrzeugId: "f1", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr2", 
   name: "Fahrer AE 2", 
   ae: "AE 2", 
-  standardFahrzeugId: "f2", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr3", 
   name: "Fahrer AE 3", 
   ae: "AE 3", 
-  standardFahrzeugId: "f1", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 {
   id: "dr4", 
   name: "Fahrer AE 4", 
   ae: "AE 4", 
-  standardFahrzeugId: "f2", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr5", 
   name: "Fahrer AE 5", 
   ae: "AE 5", 
-  standardFahrzeugId: "f1", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr6", 
   name: "Fahrer AE 6", 
   ae: "AE 6", 
-  standardFahrzeugId: "f2", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr7", 
   name: "Fahrer AE 7", 
   ae: "AE 7", 
-  standardFahrzeugId: "f3", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr8", 
   name: "Fahrer AE 8", 
   ae: "AE 8", 
-  standardFahrzeugId: "f4", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
   aktiv: !0 
 }, 
 { 
   id: "dr9", 
   name: "Sonderfahrer SD 1", 
   ae: "SD 1", 
-  standardFahrzeugId: "f1", 
-  passwort: "fahrer123", 
+  standardFahrzeugId: "", 
+  passwort: "9109", 
+  aktiv: !0 
+},
+{
+  id: "dr9",
+  name: "Sonderfahrer SD 2",
+  ae: "SD 2",
+  standardFahrzeugId: "",
+  password: "9109",
+  aktiv: !0
+},
+{
+  id: "dr10",
+  name: "Sonderfahrer SD 3",
+  ae: "SD3",
+  standardFahrzeugId: "", 
+  password: "9109",
   aktiv: !0 
 }], 
-Kv = [{ id: "u1", name: "Administrator", benutzername: "admin", rolle: "Admin", passwort: "admin" }, { id: "u2", name: "Dispo Anna", benutzername: "Anna", rolle: "Dispo", passwort: "dispo123" }, { id: "u3", name: "Dispo Ben", benutzername: "Ben", rolle: "Dispo", passwort: "dispo123" }, { id: "u4", name: "Dispo Clara", benutzername: "Clara", rolle: "Dispo", passwort: "dispo123" }]; function Zv() { let e = ["#2563eb", "#059669", "#d97706", "#dc2626", "#7c3aed", "#0891b2", "#be123c", "#4338ca"], n = []; for (let t = 1; t <= 8; t++) { let r = `AE ${t}`; n.push({ id: `dienst-${t}`, name: r, farbe: e[t - 1], fahrerZuordnung: `AE ${t}`, sonderdienst: !1, fahrten: ml(r) }) } return n.push({ id: "dienst-sd1", name: "SD 1", farbe: "#000000", fahrerZuordnung: "SD 1", sonderdienst: !0, fahrten: ml("SD 1") }), n } function Xe(e = new Date) { return e.toISOString().slice(0, 10) } function Pa(e, n) { let t = new Date(e); return t.setDate(t.getDate() + n), Xe(t) } function Gv(e) { return new Date(e + "T12:00:00").toLocaleDateString("de-DE", { weekday: "short", day: "2-digit", month: "2-digit" }) } function Jv(e) { let n = e.trim(); if (!n) return null; let t = n.toUpperCase().replace(/\s+/g, " ").trim(), r = t.match(/SD\s*([1-9]\d*)/); if (r) return { type: "dienst", name: `SD ${r[1]}` }; let l = t.match(/AE\s*([1-9]\d*)/); if (l) return { type: "dienst", name: `AE ${l[1]}` }; if (/^[1-8]$/.test(t)) return { type: "dienst", name: `AE ${t}` }; if (/^AE[1-8]$/.test(t)) return { type: "dienst", name: `AE ${t.replace("AE", "").trim()}`.replace("AE", "AE ") }; let u = t.match(/^AE\s*([1-8])$/); if (u) return { type: "dienst", name: `AE ${u[1]}` }; return { type: "benutzer", name: n } } function Rd(e) { if (!e) return []; return e.split(/[\n,;]+/).map((n) => n.trim()).filter(Boolean) } function Ta() {
+Kv = [{ id: "u1", name: "Admin Simon", benutzername: "simon.kubiak", rolle: "Admin", passwort: "171220" }, { id: "u2", name: "Michael Muhr", benutzername: "michael.muhr", rolle: "Admin", passwort: "1234" }, { id: "u3", name: "Eugen Kelsch", benutzername: "eugen.kelsch", rolle: "Dispo", passwort: "1234" }, { id: "u4", name: "Savas Afsin", benutzername: "savas.afsin", rolle: "Dispo", passwort: "1234" }, { id: "u5", name: "Jose Hilazo", benutzername: "jose.hilazo", passwort: "1234"}]; function Zv() { let e = ["#2563eb", "#059669", "#d97706", "#dc2626", "#7c3aed", "#0891b2", "#be123c", "#4338ca"], n = []; for (let t = 1; t <= 8; t++) { let r = `AE ${t}`; n.push({ id: `dienst-${t}`, name: r, farbe: e[t - 1], fahrerZuordnung: `AE ${t}`, sonderdienst: !1, fahrten: ml(r) }) } return n.push({ id: "dienst-sd1", name: "SD 1", farbe: "#000000", fahrerZuordnung: "SD 1", sonderdienst: !0, fahrten: ml("SD 1") }), n } function Xe(e = new Date) { return e.toISOString().slice(0, 10) } function Pa(e, n) { let t = new Date(e); return t.setDate(t.getDate() + n), Xe(t) } function Gv(e) { return new Date(e + "T12:00:00").toLocaleDateString("de-DE", { weekday: "short", day: "2-digit", month: "2-digit" }) } function Jv(e) { let n = e.trim(); if (!n) return null; let t = n.toUpperCase().replace(/\s+/g, " ").trim(), r = t.match(/SD\s*([1-9]\d*)/); if (r) return { type: "dienst", name: `SD ${r[1]}` }; let l = t.match(/AE\s*([1-9]\d*)/); if (l) return { type: "dienst", name: `AE ${l[1]}` }; if (/^[1-8]$/.test(t)) return { type: "dienst", name: `AE ${t}` }; if (/^AE[1-8]$/.test(t)) return { type: "dienst", name: `AE ${t.replace("AE", "").trim()}`.replace("AE", "AE ") }; let u = t.match(/^AE\s*([1-8])$/); if (u) return { type: "dienst", name: `AE ${u[1]}` }; return { type: "benutzer", name: n } } function Rd(e) { if (!e) return []; return e.split(/[\n,;]+/).map((n) => n.trim()).filter(Boolean) } function Ta() {
       let [e, n] = H.useState(Zv()), [t, r] = H.useState(Yv), [l, u] = H.useState(Xv), [o, c] = H.useState(Kv), [f, v] = H.useState(Bv), [k, S] = H.useState(Av.map((i) => ({ id: ce(), zeit: i }))), [g, C] = H.useState({}), 
       [E, T] = H.useState([]), 
       [d, h] = H.useState(""), [_, V] = H.useState(""), [U, $] = H.useState(!1), [N, A] = H.useState(null), [W, $e] = H.useState(""), [He, Ud] = H.useState("dashboard"), [Dd, $d] = H.useState("dienst-1"), [_e, ht] = H.useState(null), [Ke, jt] = H.useState({ dienstId: null, richtung: "München", uhrzeit: "06:00", code: "" }), [me, hl] = H.useState(Xe()), [Ra, Hd] = H.useState(!1), [gl, Ld] = H.useState(Xe()), [xu, Qd] = H.useState(Xe()), [ju, Wd] = H.useState(Pa(Xe(), 2)), [qn, bu] = H.useState(""), [Fn, eo] = H.useState(0), [Ma, Od] = H.useState(""), [zd, bt] = H.useState(!1), [kl, Sl] = H.useState(Xe()), [Ad, wl] = H.useState({}), [Bd, no] = H.useState(!1), [fn, Yd] = H.useState(0), [Va, Xd] = H.useState(""), [_l, Cl] = H.useState(null), [Re, sn] = H.useState(null), [fe, Ze] = H.useState(null), [Ge, dn] = H.useState(null), [O, he] = H.useState({ old: "", neu: "", neu2: "" }); 
@@ -4983,73 +5016,59 @@ db.from("reports")
 
   });
  db.from("users_config")
-  .select("*")
-  .eq("id", 2)
+  .upsert({
+    id: 2,
+    data: o,
+    updated_at: new Date().toISOString()
+  }, {onConflict: "id"})
+  .select()
   .then(({ data, error }) => {
-
-    if (error || !data?.length) return;
-
-    if (data[0].data?.length) {
-      c(data[0].data);
-    }
-
   });
    } catch { } }, []), 
-  H.useEffect(() => { try { if(!Array.isArray(e) || e.length===0) return; db.from("config").upsert({ id: 'dienste', data: e, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE dienste",error||"ok")); } catch(err) {} }, [e]),
-  H.useEffect(() => { try { if(!Array.isArray(t) || t.length===0) return; db.from("config").upsert({ id: 'fahrzeuge', data: t, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE fahrzeuge",error||"ok")); } catch(err) {} }, [t]),
-  H.useEffect(() => { try { if(!Array.isArray(l) || l.length===0) return; db.from("config").upsert({ id: 'fahrerListe', data: l, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE fahrer",error||"ok")); } catch(err) {} }, [l]),
-  H.useEffect(() => { try { if(!Array.isArray(f) || f.length===0) return; db.from("config").upsert({ id: 'orte', data: f, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE orte",error||"ok")); } catch(err) {} }, [f]),
-  H.useEffect(() => { try { if(!k || Object.keys(k).length===0) return; db.from("config").upsert({ id: 'zeiten', data: k, updated_at: new Date().toISOString() }, {onConflict: "id"}).select().then(({data,error})=>console.log("SAVE zeiten",error||"ok")); } catch(err) {} }, [k]),
+  H.useEffect(() => {
+  try {
+
+    db.from("config")
+  .update({
+    data: {
+      dienste: e,
+      fahrzeuge: t,
+      fahrerListe: l,
+      orte: f,
+      zeiten: k
+    }
+  })
+  .eq("id", 1)
+  .then(({ data, error }) => {
+      console.log("CONFIG SAVE AUSGEFUEHRT");
+      console.log("CONFIG ERROR", error);
+  });
+  } catch {}
+}, [e, t, l, f, k]);
 ``
 H.useEffect(() => {
   try {
-    if(!g || Object.keys(g).length === 0) return;
-    console.log("BOOKINGS SAVE (nur geänderte Tage)", g); 
+   console.log("BOOKINGS SAVE", g); 
+    localStorage.setItem("bookings", JSON.stringify(g));
 
-    // Nur die letzten 3 geänderten Tage speichern, nicht alle - verhindert Überschreiben
-    const lastChanged = window.__LAST_CHANGED_DATE__ || Object.keys(g).pop();
-    const datesToSave = lastChanged ? [lastChanged] : Object.keys(g).slice(-2);
-    
-    datesToSave.forEach(date => {
-      if(!g[date]) return;
+    Object.entries(g).forEach(([date, data]) => {
       db.from("bookings")
         .upsert(
           {
             booking_date: date,
-            data: g[date],
-            updated_at: new Date().toISOString()
+            data: data
           },
           {
             onConflict: "booking_date"
           }
         )
         .then(({ error }) => {
-          if (error) console.log("BOOKINGS SAVE ERROR", error);
-          else console.log("BOOKINGS SAVED OK", date);
+          if (error) console.log(error);
         });
     });
 
-  } catch(e) { console.log("save error", e) }
+  } catch { }
 }, [g])
-
-// LIVE SYNC: Wenn ein anderes Gerät speichert, automatisch nachladen
-H.useEffect(() => {
-  try {
-    const channel = db.channel('bookings-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, payload => {
-        console.log('Live Update aus Supabase!', payload);
-        if(payload.new && payload.new.booking_date) {
-          // Nur dieses Datum neu laden und mergen
-          window.__SUPABASE_BOOKINGS__ = window.__SUPABASE_BOOKINGS__ || {};
-          window.__SUPABASE_BOOKINGS__[payload.new.booking_date] = payload.new.data;
-          // Trigger reload
-          if(window.__RELOAD_BOOKINGS__) window.__RELOAD_BOOKINGS__(payload.new.booking_date, payload.new.data);
-        }
-      })
-      .subscribe();
-    return () => { db.removeChannel(channel); }
-  } catch(e) {}
-}, [])
  H.useEffect(() => {
   try {
 
@@ -5091,7 +5110,7 @@ H.useEffect(() => {
 );
 
 eo(fahrzeug?.letzterKM || 0);
- bu(Le?.standardFahrzeugId || t[0]?.id || ""), Sl(me), A({ role: "Fahrer", name: Q, dienstName: Q }), bt(!1), wl({}), Cl(null); return } } $e("Login fehlgeschlagen. Prüfe Eingabe. Tolerant: AE 4, 4, ae4, SD 1 geht.") }, Zd = () => { try { document.body.classList.add("role-admin"), window.location.hash = "admin" } catch { } A({ role: "Admin", name: "Administrator", benutzer: o.find((i) => i.benutzername.toLowerCase() === "admin") }) }, Gd = () => { try { document.body.classList.add("role-dispo"), window.location.hash = "dispo-anna" } catch { } A({ role: "Dispo", name: "Dispo Anna", benutzer: { id: "u2", name: "Dispo Anna", benutzername: "Anna", rolle: "Dispo", passwort: "dispo123" } }) }, Jd = () => { try { document.body.classList.add("role-fahrer"), window.location.hash = "fahrer-ae4" } catch { } A({ role: "Fahrer", name: "AE 4", dienstName: "AE 4" }); try { if (bt(!1), wl({}), Cl(null), Sl(Xe()), eo(76500), t && t[0]) bu(t[0].id) } catch { } }, Ha = (i, p, m) => { C((M) => { let R = { ...M }, L = { ...R[me] || {} }, Q = { ...L[i] || {} }; return Q[p] = m, L[i] = Q, R[me] = L, R }) }, Id = () => { let i = g[gl]; if (!i) { alert("Keine Buchungen am Quelldatum"); return } let p = new Date(xu), m = new Date(ju); if (m < p) { alert("Bis Datum muss nach Von liegen"); return } let M = { ...g }; for (let R = new Date(p); R <= m; R.setDate(R.getDate() + 1)) { let L = Xe(R); if (L === gl) continue; M[L] = JSON.parse(JSON.stringify(i)) } C(M), alert(`Kopiert von ${gl} nach ${xu} bis ${ju}`) }, qd = () => { let i = e.length + 1, p = `AE ${i}`; if (e.find((m) => m.name === p)) { let m = `AE ${i + Math.floor(Math.random() * 10)}`; n([...e, { id: ce(), name: m, farbe: "#2563eb", sonderdienst: !1, fahrten: ml(m) }]) } else n([...e, { id: ce(), name: p, farbe: "#2563eb", sonderdienst: !1, fahrten: ml(p) }]) }, Fd = () => { let p = `SD ${e.filter((m) => m.name.startsWith("SD")).length + 1}`; n([...e, { id: ce(), name: p, farbe: "#111111", sonderdienst: !0, fahrten: ml(p) }]) }, El = (i, p) => { n((m) => m.map((M) => M.id === i ? { ...M, ...p } : M)) }, xd = (i) => { if (confirm("Dienst wirklich löschen? Alle Fahrten gehen verloren!")) n((p) => p.filter((m) => m.id !== i)) }, jd = (i) => { let p = Ke; if (p.dienstId !== i) { jt({ dienstId: i, richtung: "München", uhrzeit: "06:00", code: "" }); return } if (!p.code) { alert("Code eingeben"); return } let m = { id: ce(), richtung: p.richtung, uhrzeit: p.uhrzeit, code: p.code }; n((M) => M.map((R) => R.id === i ? { ...R, fahrten: [...R.fahrten, m].sort((L, Q) => L.uhrzeit.localeCompare(Q.uhrzeit)) } : R)), jt({ dienstId: null, richtung: "München", uhrzeit: "06:00", code: "" }) }, bd = (i, p) => { n((m) => m.map((M) => M.id === i ? { ...M, fahrten: M.fahrten.filter((R) => R.id !== p) } : M)) }, ep = () => { if (!_e) return; n((i) => i.map((p) => p.id === _e.dienstId ? { ...p, fahrten: p.fahrten.map((m) => m.id === _e.fahrt.id ? _e.fahrt : m).sort((m, M) => m.uhrzeit.localeCompare(M.uhrzeit)) } : p)), ht(null) }, np = (i) => { if (t.find((p) => p.id === i.id)) r((p) => p.map((m) => m.id === i.id ? i : m)); else r([...t, i]); sn(null) }, tp = (i) => { if (confirm("Fahrzeug löschen?")) r((p) => p.filter((m) => m.id !== i)) }, rp = (i) => { if (l.find((p) => p.id === i.id)) u((p) => p.map((m) => m.id === i.id ? i : m)); else u([...l, i]); Ze(null) }, lp = (i) => { if (confirm("Fahrer löschen?")) u((p) => p.filter((m) => m.id !== i)) }, up = (i) => { if (o.find((p) => p.id === i.id)) c((p) => p.map((m) => m.id === i.id ? i : m)); else c([...o, i]); dn(null) }, op = (i) => { if (i === "u1") { alert("Admin kann nicht gelöscht werden"); return } if (confirm("Benutzer löschen?")) c((p) => p.filter((m) => m.id !== i)) }, La = (i, p) => { v((m) => { let M = m.find((q) => q.id === i)?.gruppe; if (!M) return m; let R = m.filter((q) => q.gruppe === M).sort((q, nr) => q.reihenfolge - nr.reihenfolge), L = R.findIndex((q) => q.id === i), Q = L + p; if (Q < 0 || Q >= R.length) return m; let G = [...R], [Le] = G.splice(L, 1); return G.splice(Q, 0, Le), G.forEach((q, nr) => q.reihenfolge = nr + 1), m.map((q) => G.find((nr) => nr.id === q.id) || q) }) }, Nl = (N?.dienstName ? e.find((i) => i.name === N.dienstName) : null)?.sonderdienst, to = H.useMemo(() => { if (!N?.dienstName) return []; if (Nl) return er; let i = e.find((p) => p.name === N.dienstName); if (!i) return []; return i.fahrten.map((p) => ({ ...p, dienstName: i.name, dienstId: i.id, farbe: i.farbe, sonderdienst: i.sonderdienst })).sort((p, m) => p.uhrzeit.localeCompare(m.uhrzeit)) }, [N, e, er, Nl]), Qa = (i, p, m) => { return g[m]?.[i]?.[p] || "" }, Wa = (i, p) => { return Ad[i]?.[p] || { counter: 0, checked: {} } }, ip = (i, p, m) => { wl((M) => { let R = { ...M }, L = { ...R[i] || {} }, Q = L[p] ? { ...L[p], checked: { ...L[p].checked } } : { counter: 0, checked: {} }; Q.checked[m] = !Q.checked[m]; let G = Object.values(Q.checked).filter(Boolean).length; if (Q.counter < G) Q.counter = G; return L[p] = Q, R[i] = L, R }) }, Oa = (i, p, m) => { wl((M) => { let R = { ...M }, L = { ...R[i] || {} }, Q = L[p] ? { ...L[p], checked: { ...L[p].checked } } : { counter: 0, checked: {} }; return Q.counter = Math.max(0, Q.counter + m), L[p] = Q, R[i] = L, R }) }, ap = () => { let i = N?.dienstName || "", p = t.find((R) => R.id === qn); if (!p) { alert("Fahrzeug wählen"); return } if (!fn || fn <= Fn) { alert("KM Ende muss größer als Start sein"); return } let m = fn - Fn, M = { id: ce(), date: kl, dienstName: i, fahrzeugId: qn, kennzeichen: p.kennzeichen, kmStart: Fn, kmEnde: fn, gefahrene: m, notiz: Va, tank: Ma, fahrten: to.map((R) => { let L = R.richtung === "München" ? Pn.Ingolstadt : Pn.München; return { fahrtId: R.id, uhrzeit: R.uhrzeit, richtung: R.richtung, code: R.code, dienstName: R.dienstName, halts: L.map((Q) => { let G = Rd(Qa(R.id, Q.id, kl)), Le = Wa(R.id, Q.id); return { ortId: Q.id, ortName: Q.name, soll: G, istChecked: Object.keys(Le.checked).filter((q) => Le.checked[q]), istCount: Le.counter } }) } }), createdAt: new Date().toISOString() }; T((R) => [M, ...R]), 
+ bu(Le?.standardFahrzeugId || t[0]?.id || ""), Sl(me), A({ role: "Fahrer", name: Q, dienstName: Q }), bt(!1), wl({}), Cl(null); return } } $e("Login fehlgeschlagen. Prüfe Eingabe. Tolerant: AE 4, 4, ae4, SD 1 geht.") }, Zd = () => { try { document.body.classList.add("role-admin"), window.location.hash = "admin" } catch { } A({ role: "Admin", name: "Administrator", benutzer: o.find((i) => i.benutzername.toLowerCase() === "admin") }) }, Gd = () => { try { document.body.classList.add("role-dispo"), window.location.hash = "dispo-anna" } catch { } A({ role: "Dispo", name: "Dispo Anna", benutzer: { id: "u2", name: "Dispo Anna", benutzername: "Anna", rolle: "Dispo", passwort: "dispo123" } }) }, Jd = () => { try { document.body.classList.add("role-fahrer"), window.location.hash = "fahrer-ae4" } catch { } A({ role: "Fahrer", name: "AE 4", dienstName: "AE 4" }); try { if (bt(!1), wl({}), Cl(null), Sl(Xe()), eo(76500), t && t[0]) bu(t[0].id) } catch { } }, Ha = (i, p, m) => { C((M) => { let R = { ...M }, L = { ...R[me] || {} }, Q = { ...L[i] || {} }; return Q[p] = m, L[i] = Q, R[me] = L, R }) }, Id = () => { let i = g[gl]; if (!i) { alert("Keine Buchungen am Quelldatum"); return } let p = new Date(xu), m = new Date(ju); if (m < p) { alert("Bis Datum muss nach Von liegen"); return } let M = { ...g }; for (let R = new Date(p); R <= m; R.setDate(R.getDate() + 1)) { let L = Xe(R); if (L === gl) continue; M[L] = JSON.parse(JSON.stringify(i)) } C(M), alert(`Kopiert von ${gl} nach ${xu} bis ${ju}`) }, qd = () => { let i = e.length + 1, p = `AE ${i}`; if (e.find((m) => m.name === p)) { let m = `AE ${i + Math.floor(Math.random() * 10)}`; n([...e, { id: ce(), name: m, farbe: "#2563eb", sonderdienst: !1, fahrten: ml(m) }]) } else n([...e, { id: ce(), name: p, farbe: "#2563eb", sonderdienst: !1, fahrten: ml(p) }]) }, Fd = () => { let p = `SD ${e.filter((m) => m.name.startsWith("SD")).length + 1}`; n([...e, { id: ce(), name: p, farbe: "#111", sonderdienst: !0, fahrten: ml(p) }]) }, El = (i, p) => { n((m) => m.map((M) => M.id === i ? { ...M, ...p } : M)) }, xd = (i) => { if (confirm("Dienst wirklich löschen? Alle Fahrten gehen verloren!")) n((p) => p.filter((m) => m.id !== i)) }, jd = (i) => { let p = Ke; if (p.dienstId !== i) { jt({ dienstId: i, richtung: "München", uhrzeit: "06:00", code: "" }); return } if (!p.code) { alert("Code eingeben"); return } let m = { id: ce(), richtung: p.richtung, uhrzeit: p.uhrzeit, code: p.code }; n((M) => M.map((R) => R.id === i ? { ...R, fahrten: [...R.fahrten, m].sort((L, Q) => L.uhrzeit.localeCompare(Q.uhrzeit)) } : R)), jt({ dienstId: null, richtung: "München", uhrzeit: "06:00", code: "" }) }, bd = (i, p) => { n((m) => m.map((M) => M.id === i ? { ...M, fahrten: M.fahrten.filter((R) => R.id !== p) } : M)) }, ep = () => { if (!_e) return; n((i) => i.map((p) => p.id === _e.dienstId ? { ...p, fahrten: p.fahrten.map((m) => m.id === _e.fahrt.id ? _e.fahrt : m).sort((m, M) => m.uhrzeit.localeCompare(M.uhrzeit)) } : p)), ht(null) }, np = (i) => { if (t.find((p) => p.id === i.id)) r((p) => p.map((m) => m.id === i.id ? i : m)); else r([...t, i]); sn(null) }, tp = (i) => { if (confirm("Fahrzeug löschen?")) r((p) => p.filter((m) => m.id !== i)) }, rp = (i) => { if (l.find((p) => p.id === i.id)) u((p) => p.map((m) => m.id === i.id ? i : m)); else u([...l, i]); Ze(null) }, lp = (i) => { if (confirm("Fahrer löschen?")) u((p) => p.filter((m) => m.id !== i)) }, up = (i) => { if (o.find((p) => p.id === i.id)) c((p) => p.map((m) => m.id === i.id ? i : m)); else c([...o, i]); dn(null) }, op = (i) => { if (i === "u1") { alert("Admin kann nicht gelöscht werden"); return } if (confirm("Benutzer löschen?")) c((p) => p.filter((m) => m.id !== i)) }, La = (i, p) => { v((m) => { let M = m.find((q) => q.id === i)?.gruppe; if (!M) return m; let R = m.filter((q) => q.gruppe === M).sort((q, nr) => q.reihenfolge - nr.reihenfolge), L = R.findIndex((q) => q.id === i), Q = L + p; if (Q < 0 || Q >= R.length) return m; let G = [...R], [Le] = G.splice(L, 1); return G.splice(Q, 0, Le), G.forEach((q, nr) => q.reihenfolge = nr + 1), m.map((q) => G.find((nr) => nr.id === q.id) || q) }) }, Nl = (N?.dienstName ? e.find((i) => i.name === N.dienstName) : null)?.sonderdienst, to = H.useMemo(() => { if (!N?.dienstName) return []; if (Nl) return er; let i = e.find((p) => p.name === N.dienstName); if (!i) return []; return i.fahrten.map((p) => ({ ...p, dienstName: i.name, dienstId: i.id, farbe: i.farbe, sonderdienst: i.sonderdienst })).sort((p, m) => p.uhrzeit.localeCompare(m.uhrzeit)) }, [N, e, er, Nl]), Qa = (i, p, m) => { return g[m]?.[i]?.[p] || "" }, Wa = (i, p) => { return Ad[i]?.[p] || { counter: 0, checked: {} } }, ip = (i, p, m) => { wl((M) => { let R = { ...M }, L = { ...R[i] || {} }, Q = L[p] ? { ...L[p], checked: { ...L[p].checked } } : { counter: 0, checked: {} }; Q.checked[m] = !Q.checked[m]; let G = Object.values(Q.checked).filter(Boolean).length; if (Q.counter < G) Q.counter = G; return L[p] = Q, R[i] = L, R }) }, Oa = (i, p, m) => { wl((M) => { let R = { ...M }, L = { ...R[i] || {} }, Q = L[p] ? { ...L[p], checked: { ...L[p].checked } } : { counter: 0, checked: {} }; return Q.counter = Math.max(0, Q.counter + m), L[p] = Q, R[i] = L, R }) }, ap = () => { let i = N?.dienstName || "", p = t.find((R) => R.id === qn); if (!p) { alert("Fahrzeug wählen"); return } if (!fn || fn <= Fn) { alert("KM Ende muss größer als Start sein"); return } let m = fn - Fn, M = { id: ce(), date: kl, dienstName: i, fahrzeugId: qn, kennzeichen: p.kennzeichen, kmStart: Fn, kmEnde: fn, gefahrene: m, notiz: Va, tank: Ma, fahrten: to.map((R) => { let L = R.richtung === "München" ? Pn.Ingolstadt : Pn.München; return { fahrtId: R.id, uhrzeit: R.uhrzeit, richtung: R.richtung, code: R.code, dienstName: R.dienstName, halts: L.map((Q) => { let G = Rd(Qa(R.id, Q.id, kl)), Le = Wa(R.id, Q.id); return { ortId: Q.id, ortName: Q.name, soll: G, istChecked: Object.keys(Le.checked).filter((q) => Le.checked[q]), istCount: Le.counter } }) } }), createdAt: new Date().toISOString() }; T((R) => [M, ...R]), 
  r((R) =>
   R.map((f) =>
     f.id === qn
@@ -5183,23 +5202,8 @@ return a("td", {
   <script>
     (function () {
       const DOC_KEY = 'x109-dokumente';
-      function getDocs() { try { return window.DOKS_CACHE || [] } catch (e) { return [] } }
-      window.DOKS_CACHE = window.DOKS_CACHE || [];
-      // Lade Dokumente aus Supabase
-      try {
-        db.from("dokumente").select("*").then(({data}) => {
-          if(data) { window.DOKS_CACHE = data.map(r=>r.data); }
-        });
-      } catch(e) {}
-
-      function saveDocs(d) { 
-        window.DOKS_CACHE = d;
-        try {
-          d.forEach(doc => {
-            db.from("dokumente").upsert({ id: doc.id || doc.name, data: doc }, {onConflict: "id"}).then(()=>{});
-          });
-        } catch(e) {}
-      }
+      function getDocs() { try { return JSON.parse(localStorage.getItem(DOC_KEY) || '[]') } catch (e) { return [] } }
+      function saveDocs(d) { localStorage.setItem(DOC_KEY, JSON.stringify(d)); }
      function getReports() {
   return window.REPORTS_CACHE || [];
 }
@@ -5572,15 +5576,7 @@ if (monthSel) {
     (function () {
       const DOC_KEY = 'x109-dokumente';
       const FAHRER_ID = 'fahrer-dok-box';
-      function getDocs() { try { return window.DOKS_CACHE || [] } catch (e) { return [] } }
-      window.DOKS_CACHE = window.DOKS_CACHE || [];
-      // Lade Dokumente aus Supabase
-      try {
-        db.from("dokumente").select("*").then(({data}) => {
-          if(data) { window.DOKS_CACHE = data.map(r=>r.data); }
-        });
-      } catch(e) {}
-
+      function getDocs() { try { return JSON.parse(localStorage.getItem(DOC_KEY) || '[]') } catch (e) { return [] } }
       function getHeader() { const h = document.querySelector('header'); return h ? (h.innerText || '') : ''; }
       function isFahrer() {
         const ht = (getHeader() || '').toLowerCase();
