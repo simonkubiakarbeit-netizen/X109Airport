@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -14,7 +16,7 @@ db.from("bookings")
    
   });
 </script>
-<head>
+
   <style>
     div:has(>div>div>div) {}
 
@@ -5032,24 +5034,7 @@ H.useEffect(() => {
   } catch(e) { console.log("save error", e) }
 }, [g])
 
-// LIVE SYNC: Wenn ein anderes Gerät speichert, automatisch nachladen
-H.useEffect(() => {
-  try {
-    const channel = db.channel('bookings-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, payload => {
-        console.log('Live Update aus Supabase!', payload);
-        if(payload.new && payload.new.booking_date) {
-          // Nur dieses Datum neu laden und mergen
-          window.__SUPABASE_BOOKINGS__ = window.__SUPABASE_BOOKINGS__ || {};
-          window.__SUPABASE_BOOKINGS__[payload.new.booking_date] = payload.new.data;
-          // Trigger reload
-          if(window.__RELOAD_BOOKINGS__) window.__RELOAD_BOOKINGS__(payload.new.booking_date, payload.new.data);
-        }
-      })
-      .subscribe();
-    return () => { db.removeChannel(channel); }
-  } catch(e) {}
-}, [])
+H.useEffect(()=>{}, []),
  H.useEffect(() => {
   try {
 
